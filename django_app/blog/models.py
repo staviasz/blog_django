@@ -25,6 +25,11 @@ class PostAttachment(AbstractAttachment):
     return super_save
 
 
+class PublishedManager(models.Manager):
+  def get_published(self):
+    return self.filter(is_published=True).order_by('-pk')
+
+
 class Tag(models.Model):
   class Meta:
     verbose_name = "Tag"
@@ -86,6 +91,13 @@ class Page(models.Model):
   )
   content = models.TextField()
 
+  objects = PublishedManager()
+
+  def get_absolute_url(self):
+    if not self.is_published:
+      return reverse('blog:index')
+    return reverse('blog:page', args=(self.slug,))
+
   def save(self, *args, **kwargs):
     if not self.slug:
       self.slug = slugify_new(self.name)
@@ -95,16 +107,12 @@ class Page(models.Model):
     return self.title
 
 
-class PostManager(models.Manager):
-  def get_published(self):
-    return self.filter(is_published=True).order_by('-pk')
-
 class Post(models.Model):
   class Meta:
     verbose_name = "Post"
     verbose_name_plural = "Posts"
 
-  objects = PostManager()
+  objects = PublishedManager()
 
   title = models.CharField(max_length=255)
   slug = models.SlugField(
@@ -117,7 +125,7 @@ class Post(models.Model):
   excerpt = models.CharField(max_length=255)
   is_published = models.BooleanField(
       default=False,
-      help_text='this field needs to be checked for the post to be displayed'
+      help_text='this field needs to be checked for the post to be displayed',
     )
   content = models.TextField()
   cover = models.ImageField(
