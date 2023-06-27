@@ -139,6 +139,8 @@ h6 {
 
 img {
   max-width: 100%;
+  display: block;
+  margin: 0 auto;
 }
 
 pre {
@@ -151,6 +153,11 @@ pre {
 pre,
 code {
   font-family: var(--ff-mono);
+  font-size: var(--fs-smlr);
+}
+
+.CodeMirror {
+  height: auto !important;
 }
 
 input[type='search']::-webkit-search-decoration,

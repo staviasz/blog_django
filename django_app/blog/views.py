@@ -55,3 +55,33 @@ def author(request, author_pk):
       'page_obj': page_obj,
     }
   )
+
+def category(request, slug):
+  posts = Post.objects.get_published().filter(category__slug=slug)
+
+  paginator = Paginator(posts, 9)
+  page_number = request.GET.get("page")
+  page_obj = paginator.get_page(page_number)
+
+  return render(
+    request,
+    'blog/pages/index.html',
+    {
+      'page_obj': page_obj,
+    }
+  )
+
+def tag(request, slug):
+  posts = Post.objects.get_published().filter(tags__slug=slug)
+
+  paginator = Paginator(posts, 9)
+  page_number = request.GET.get("page")
+  page_obj = paginator.get_page(page_number)
+
+  return render(
+    request,
+    'blog/pages/index.html',
+    {
+      'page_obj': page_obj,
+    }
+  )

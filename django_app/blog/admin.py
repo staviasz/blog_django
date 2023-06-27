@@ -57,6 +57,7 @@ class PostAdmin(SummernoteModelAdmin):
   prepopulated_fields = {
     'slug': ('title',),
   }
+  autocomplete_fields = 'tags', 'category',
 
   def link(self, obj):
     if not obj.pk:
